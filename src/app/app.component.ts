@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { ServiceService } from './service.service';
 
 @Component({
   selector: 'fr-root',
@@ -6,5 +7,18 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'fr';
+  constructor(private service: ServiceService) {
+  }
+
+  login() {
+    this.service.login();
+  }
+
+  logout() {
+    this.service.logout();
+  }
+
+  getUser() {
+    return this.service.getUser();
+  }
 }

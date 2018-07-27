@@ -1,0 +1,11 @@
+<div id="container">
+  <mat-card *ngFor="let restaurant of service.restaurant$ | async">
+    {{restaurant.name}}<br />
+    <span *ngFor="let score of scores">
+      <div class="star" [ngClass]="{'selected': isStarLit(restaurant, score)}">
+        <mat-icon (click)="saveScore(restaurant, score)">star_rate</mat-icon>
+        <div class="score" (click)="saveScore(restaurant, score)">{{score}}</div>
+      </div>
+    </span>
+  </mat-card>
+</div>

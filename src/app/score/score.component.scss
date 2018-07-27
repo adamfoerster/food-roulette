@@ -1,0 +1,40 @@
+#container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+
+  .mat-card {
+    width: 100%;
+    max-width: 300px;
+    margin: 5px;
+    position: relative;
+    text-transform: uppercase;
+
+    .star {
+      display: inline;
+      position: relative;
+      line-height: 1em;
+    }
+
+    .mat-icon {
+      font-size: 3.5em;
+      width: 1em;
+      cursor: pointer;
+    }
+
+    .score {
+      width: 1em;
+      position: absolute;
+      top: -20px;
+      font-size: 1.1em;
+      left: 23px;
+      color: #fff;
+      cursor: pointer;
+      text-shadow: 1px 1px 1px #000;
+    }
+    .selected{
+      color: #aaaa00;
+      text-shadow: 1px 1px 1px #000;
+    }
+  }
+}

@@ -1,0 +1,18 @@
+#body {
+  position: relative;
+  width: 100%;
+  max-width: 820px;
+  box-sizing: border-box;
+  margin: 0 auto;
+
+  .example-icon {
+    padding: 0 14px;
+  }
+
+  .example-spacer {
+    flex: 1 1 auto;
+  }
+  .mat-icon{
+    cursor: pointer;
+  }
+}
