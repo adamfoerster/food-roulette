@@ -17,11 +17,13 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { ServiceService } from './service.service';
+import { MonitorComponent } from './monitor/monitor.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    ScoreComponent
+    ScoreComponent,
+    MonitorComponent
   ],
   imports: [
     BrowserModule,
