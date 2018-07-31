@@ -1,6 +1,12 @@
 <div id="monitor">
   <mat-card>
     Acompanhe abaixo os resultados ao vivo:
+    <ul>
+      <li *ngFor="let res of service.currentStars">
+        <b>{{res.restaurant}}:</b>&nbsp;
+        {{res.stars}}
+      </li>
+    </ul>
     <pre>
       {{service.currentStars | json}}
     </pre>

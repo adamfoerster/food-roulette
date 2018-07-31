@@ -12,7 +12,7 @@ import { AngularFireStorageModule } from 'angularfire2/storage';
 import { AngularFireAuthModule } from 'angularfire2/auth';
 import { ScoreComponent } from './score/score.component';
 import { MatToolbarModule } from '@angular/material/toolbar';
-
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -37,6 +37,7 @@ import { MonitorComponent } from './monitor/monitor.component';
     MatCardModule,
     MatIconModule,
     MatToolbarModule,
+    MatSnackBarModule,
   ],
   providers: [ServiceService],
   bootstrap: [AppComponent]
