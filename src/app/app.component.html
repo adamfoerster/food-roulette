@@ -2,6 +2,7 @@
   <div *ngIf="getUser() | async as user; else showLogin">
     <mat-toolbar color="primary">
       <mat-toolbar-row>
+        <mat-icon routerLink="/">home</mat-icon>
         <span class="example-spacer">Olá {{ user.displayName }}, onde vamos comer hoje?</span>
         <mat-icon (click)="logout()">exit_to_app</mat-icon>
       </mat-toolbar-row>

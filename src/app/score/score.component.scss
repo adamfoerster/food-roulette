@@ -5,9 +5,10 @@
 
   .mat-card {
     width: 100%;
-    max-width: 300px;
-    margin: 5px;
+    max-width: 340px;
+    margin: 10px 15px;
     position: relative;
+    box-sizing: border-box;
     text-transform: uppercase;
 
     .star {

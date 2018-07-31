@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from 'angularfire2/firestore';
-import { Observable, combineLatest, BehaviorSubject } from 'rxjs';
+import { Observable, combineLatest, BehaviorSubject, Subject } from 'rxjs';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { auth } from 'firebase/app';
-import { map, tap, first } from 'rxjs/operators';
+import { map, tap, first, filter } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -13,17 +14,25 @@ export class ServiceService {
   scoreOfDay$: Observable<any>;
   scoreOfDaySnap: any;
   restaurantsScored: string[] = [];
-  currentResult$: Observable<any>;
+  currentResult$: Subject<any> = new Subject();
   finished$: BehaviorSubject<boolean> = new BehaviorSubject(false);
   currentStars: any[];
 
-  constructor(private db: AngularFirestore, public afAuth: AngularFireAuth) {
-    this.restaurant$ = this.db.collection('restaurants').snapshotChanges()
-      .pipe(map((actions: any) => this.getObjectWithId(actions)));
+  constructor(
+    private router: Router,
+    private db: AngularFirestore,
+    public afAuth: AngularFireAuth
+  ) {
+    this.getUser()
+      .pipe(filter(u => !!u && !!u.uid))
+      .subscribe(u => this.initialize(u));
+  }
+
+  initialize(user) {
+    this.restaurant$ = this.getRestaurants();
     this.scoreOfDay$ = this.db.collection('days').doc(this.getDay())
       .valueChanges();
-
-    combineLatest(this.restaurant$, this.scoreOfDay$, this.getUser())
+    combineLatest(this.restaurant$, this.scoreOfDay$)
       .pipe(tap(res => {
         // creates current day if doesnt exist
         if (!res[1]) this.db.collection('days').doc(this.getDay()).set({})
@@ -31,7 +40,7 @@ export class ServiceService {
       .subscribe(res => {
         const restaurants = res[0];
         const scores = res[1];
-        const { uid } = res[2];
+        const { uid } = user;
         const qtdRestScored = this.getRestaurantsScored(scores, uid).length;
         const qtdRest = restaurants.length;
 
@@ -43,23 +52,33 @@ export class ServiceService {
           .map(restId => scores[restId][uid] ? restId : null);
 
         this.currentStars = this.getTotalStarPerRestaurant(scores, restaurants);
+        this.currentResult$.next(this.currentStars);
 
         if (qtdRestScored == qtdRest && qtdRest != 0) {
           this.finished$.next(true);
+        } else {
+          this.finished$.next(false);
         }
       });
   }
 
   login() {
-    this.afAuth.auth.signInWithPopup(new auth.GoogleAuthProvider());
+    this.afAuth.auth.signInWithPopup(new auth.GoogleAuthProvider())
+      .then(u => this.initialize(u));
   }
 
   logout() {
     this.afAuth.auth.signOut();
+    this.router.navigate(['/']);
   }
 
   getUser(): Observable<any> {
     return this.afAuth.user;
+  }
+
+  getRestaurants() {
+    return this.db.collection('restaurants').snapshotChanges()
+      .pipe(map((actions: any) => this.getObjectWithId(actions)));
   }
 
   addScore(restaurant, score) {

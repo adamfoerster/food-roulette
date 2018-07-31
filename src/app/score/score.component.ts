@@ -1,6 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { filter } from 'rxjs/operators';
 import { ServiceService } from '../service.service';
 
 @Component({
@@ -8,15 +7,18 @@ import { ServiceService } from '../service.service';
   templateUrl: './score.component.html',
   styleUrls: ['./score.component.scss']
 })
-export class ScoreComponent implements OnInit {
+export class ScoreComponent implements OnInit, OnDestroy {
   scores = [1,2,3,4,5];
+  subFin: any;
 
-  constructor(public service: ServiceService, private router: Router) { }
+  constructor(public service: ServiceService, private router: Router) {
+    this.service.restaurant$ = this.service.getRestaurants();
+  }
 
   ngOnInit() {
-    this.service.finished$
-      .pipe(filter(finished => !!finished))
-      .subscribe(finished => this.router.navigate(['monitor']));
+    this.subFin = this.service.finished$.subscribe(finished => {
+      if (finished) this.router.navigate(['monitor']);
+    });
   }
 
   isStarLit(restaurant, star): boolean {
@@ -25,6 +27,10 @@ export class ScoreComponent implements OnInit {
 
   saveScore(restaurant, score){
     this.service.addScore(restaurant, score);
+  }
+
+  ngOnDestroy() {
+    this.subFin.unsubscribe();
   }
 
 }

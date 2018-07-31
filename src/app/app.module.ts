@@ -13,11 +13,12 @@ import { AngularFireAuthModule } from 'angularfire2/auth';
 import { ScoreComponent } from './score/score.component';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { ServiceService } from './service.service';
 import { MonitorComponent } from './monitor/monitor.component';
+import { MatListModule } from '@angular/material/list';
 
 @NgModule({
   declarations: [
@@ -38,6 +39,8 @@ import { MonitorComponent } from './monitor/monitor.component';
     MatIconModule,
     MatToolbarModule,
     MatSnackBarModule,
+    NgxChartsModule,
+    MatListModule,
   ],
   providers: [ServiceService],
   bootstrap: [AppComponent]
