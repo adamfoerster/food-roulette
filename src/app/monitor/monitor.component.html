@@ -1,18 +1,20 @@
 <div id="monitor">
-  <div #roulette class="roulette" (window:resize)="onResize($event)">
-    <ngx-charts-pie-chart [results]="data" [legend]="false" [labels]="false" [view]="view">
+  <div #roulette (click)="spin()" class="roulette {{isSpinning ? 'spin' : ''}}">
+    <ngx-charts-pie-chart [results]="data" [legend]="false" [labels]="false" [view]="view" [scheme]="colors">
     </ngx-charts-pie-chart>
     <br style="clear:both"/>
   </div>
   <br />
   <mat-card>
-    Acompanhe abaixo os resultados ao vivo:
-    <mat-list>
-      <mat-list-item *ngFor="let res of service.currentStars">
-        <b>{{res.restaurant}}:</b>&nbsp;
-        {{res.stars}}
-      </mat-list-item>
-    </mat-list>
+    <mat-card-title>{{service.getDay()}}</mat-card-title>
+    <mat-card-content>
+      Acompanhe abaixo os resultados ao vivo:
+      <mat-list>
+        <mat-list-item *ngFor="let res of service.currentStars, index as i">
+          <div class="square" [ngStyle]="{'background-color': colors.domain[i]}">&nbsp;</div><b>{{res.restaurant}}:</b>&nbsp;
+          {{res.stars}}
+        </mat-list-item>
+      </mat-list>
+    </mat-card-content>
   </mat-card>
-
 </div>

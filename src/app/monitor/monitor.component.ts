@@ -9,8 +9,12 @@ import { ServiceService } from '../service.service';
 export class MonitorComponent implements OnInit {
   elWidth: number;
   data: any;
-  view: any;
+  view: any = [300, 300];
+  colors: any = {
+    domain: ['#CC0000', '#CC6600', '#CCCC00', '#66CC00', '#00CC00', '#00CC66', '#00CCCC', '#0066CC', '#0000CC', '#000066']
+  };
   @ViewChild('roulette') element: HTMLElement;
+  isSpinning: boolean = false;
 
   constructor(public renderer: Renderer, public service: ServiceService) { }
 
@@ -19,9 +23,6 @@ export class MonitorComponent implements OnInit {
     this.service.currentResult$.subscribe( _ => {
       this.mapResults();
     });
-    console.log(this.element.clientWidth);
-    this.element.clientWidth;
-    // this.view = [this.element.clientWidth, this.element.clientWidth];
   }
 
   mapResults() {
@@ -31,8 +32,7 @@ export class MonitorComponent implements OnInit {
     });
   }
 
-  onResize(e) {
-    console.log(e.target.innerWidth);
-    this.view = [this.element.clientWidth, this.element.clientWidth];
+  spin() {
+    this.isSpinning = !this.isSpinning;
   }
 }
