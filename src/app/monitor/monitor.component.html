@@ -1,4 +1,9 @@
 <div id="monitor">
+  <div class="winner">
+    <pre>
+      qqq
+    </pre>
+  </div>
   <div #roulette (click)="spin()" class="roulette {{isSpinning ? 'spin' : ''}}">
     <ngx-charts-pie-chart [results]="data" [legend]="false" [labels]="false" [view]="view" [scheme]="colors">
     </ngx-charts-pie-chart>

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnChanges, Renderer, HostBinding, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, Renderer, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ServiceService } from '../service.service';
 @Component({
   selector: 'fr-monitor',

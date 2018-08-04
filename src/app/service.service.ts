@@ -121,13 +121,6 @@ export class ServiceService {
     });
   }
 
-  mapRestaurant(restaurant, scores) {
-    return {
-      ...restaurant,
-      result: scores.find(score => 3)
-    };
-  }
-
   getTotalStarPerRestaurant(scores, restaurants): any[] {
     return Object.keys(scores).map(restId => {
       const restaurant = scores[restId];
@@ -154,5 +147,23 @@ export class ServiceService {
         if (scores[restId][uid]) restaurants.push(restId);
       });
     return restaurants;
+  }
+
+  getWinner(): Observable<any> {
+    // return combineLatest(
+    //   this.db.collection('results').doc(this.getDay()).valueChanges(),
+    //   this.getRestaurants()
+    // )
+    return this.db.collection('results').doc(this.getDay()).valueChanges()
+    .pipe(
+      map(combo => {
+        return combo;
+        // const winner = combo[0];
+        // console.log(winner)
+        // const restaurants = combo[1];
+        // return restaurants
+        //   .find(rest => winner['winner']['index'] == rest.id).name;
+      })
+    );
   }
 }
