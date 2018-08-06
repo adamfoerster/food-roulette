@@ -1,9 +1,9 @@
 <div id="monitor">
-  <div class="winner">
-    <pre>
-      qqq
-    </pre>
-  </div>
+  <mat-card *ngIf="winner">
+    E o vencedor é:
+    <h1>{{winner}}</h1>
+    Bom apetite a todos!
+  </mat-card>
   <div #roulette (click)="spin()" class="roulette {{isSpinning ? 'spin' : ''}}">
     <ngx-charts-pie-chart [results]="data" [legend]="false" [labels]="false" [view]="view" [scheme]="colors">
     </ngx-charts-pie-chart>

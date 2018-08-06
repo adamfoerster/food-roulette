@@ -15,6 +15,7 @@ export class MonitorComponent implements OnInit {
   };
   @ViewChild('roulette') element: HTMLElement;
   isSpinning: boolean = false;
+  winner: any;
 
   constructor(public renderer: Renderer, public service: ServiceService) { }
 
@@ -23,6 +24,7 @@ export class MonitorComponent implements OnInit {
     this.service.currentResult$.subscribe( _ => {
       this.mapResults();
     });
+    this.service.getWinner().subscribe(winner => this.winner = winner);
   }
 
   mapResults() {

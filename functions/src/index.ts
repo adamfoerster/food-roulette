@@ -4,16 +4,16 @@ const moment = require('moment');
 admin.initializeApp(functions.config({ timestampsInSnapshots: true }).firebase);
 
 const getDay = () => {
-	const today = moment();
-	const mm = today.month(); // getMonth() is zero-based
-	const dd = today.date();
-
-	return [
-		today.year(),
-		(mm > 9 ? '' : '0') + mm,
-		(dd > 9 ? '' : '0') + dd
-	].join('');
-	// return '20180804';
+	// const today = moment();
+	// const mm = today.month(); // getMonth() is zero-based
+	// const dd = today.date();
+	//
+	// return [
+	// 	today.year(),
+	// 	(mm > 9 ? '' : '0') + mm,
+	// 	(dd > 9 ? '' : '0') + dd
+	// ].join('');
+	return '20180806';
 }
 
 const randomStar = (results, totalStars): any => {

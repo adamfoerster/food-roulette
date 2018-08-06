@@ -150,19 +150,18 @@ export class ServiceService {
   }
 
   getWinner(): Observable<any> {
-    // return combineLatest(
-    //   this.db.collection('results').doc(this.getDay()).valueChanges(),
-    //   this.getRestaurants()
-    // )
-    return this.db.collection('results').doc(this.getDay()).valueChanges()
+    return combineLatest(
+      this.db.collection('results').doc(this.getDay()).valueChanges(),
+      this.getRestaurants()
+    )
+    // return this.db.collection('results').doc(this.getDay()).valueChanges()
     .pipe(
+      filter(combo => !!combo[0] && !!combo[0]['winner']),
       map(combo => {
-        return combo;
-        // const winner = combo[0];
-        // console.log(winner)
-        // const restaurants = combo[1];
-        // return restaurants
-        //   .find(rest => winner['winner']['index'] == rest.id).name;
+        const winner = combo[0];
+        const restaurants = combo[1];
+        return restaurants
+          .find(rest => winner['winner']['index'] == rest.id).name;
       })
     );
   }
