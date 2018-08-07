@@ -5,14 +5,14 @@
     Bom apetite a todos!<br />
     <img src="https://media.giphy.com/media/SasDDqOSRclNu/giphy.gif" style="width:100%" />
   </mat-card>
-  <div #roulette (click)="spin()" class="roulette {{isSpinning ? 'spin' : ''}}">
+  <div *ngIf="!winner" #roulette (click)="spin()" class="roulette {{isSpinning ? 'spin' : ''}}">
     <ngx-charts-pie-chart [results]="data" [legend]="false" [labels]="false" [view]="view" [scheme]="colors">
     </ngx-charts-pie-chart>
     <br style="clear:both"/>
   </div>
   <br />
   <mat-card>
-    <mat-card-title>{{service.getDay()}}</mat-card-title>
+    <mat-card-title>{{service.getHumanDate()}}</mat-card-title>
     <mat-card-content>
       Acompanhe abaixo os resultados ao vivo:
       <mat-list>

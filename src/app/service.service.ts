@@ -165,4 +165,9 @@ export class ServiceService {
       })
     );
   }
+
+  getHumanDate() {
+    const dt = this.getDay();
+    return `${dt.substr(6,2)}/${dt.substr(4,2)}/${dt.substr(0,4)}`;
+  }
 }
