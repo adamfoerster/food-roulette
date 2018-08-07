@@ -53,7 +53,9 @@ exports.spinTheRoulette = functions.https.onRequest((request, response) => {
     return docRef.get()
         .then(querySnapshot => {
         const winner = getTotalStarPerRestaurant(querySnapshot.data());
-        resultRef.set(winner);
+        resultRef.set(winner)
+            .then(r => console.log('ok:' + r))
+            .catch(e => console.log(e));
         return response.send(winner);
     })
         .catch(err => console.log(err));
