@@ -2,7 +2,8 @@
   <mat-card *ngIf="winner">
     E o vencedor é:
     <h1>{{winner}}</h1>
-    Bom apetite a todos!
+    Bom apetite a todos!<br />
+    <img src="https://media.giphy.com/media/SasDDqOSRclNu/giphy.gif" style="width:100%" />
   </mat-card>
   <div #roulette (click)="spin()" class="roulette {{isSpinning ? 'spin' : ''}}">
     <ngx-charts-pie-chart [results]="data" [legend]="false" [labels]="false" [view]="view" [scheme]="colors">
