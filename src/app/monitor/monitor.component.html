@@ -3,7 +3,7 @@
     E o vencedor é:
     <h1>{{winner}}</h1>
     Bom apetite a todos!<br />
-    <img src="https://media.giphy.com/media/SasDDqOSRclNu/giphy.gif" style="width:100%" />
+    <img src="https://media.giphy.com/media/semLgqWI3U3qU/giphy.gif" style="width:100%" />
   </mat-card>
   <div *ngIf="!winner" #roulette (click)="spin()" class="roulette {{isSpinning ? 'spin' : ''}}">
     <ngx-charts-pie-chart [results]="data" [legend]="false" [labels]="false" [view]="view" [scheme]="colors">

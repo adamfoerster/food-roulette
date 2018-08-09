@@ -4,7 +4,7 @@ const admin = require("firebase-admin");
 const functions = require('firebase-functions');
 admin.initializeApp();
 const getDay = () => {
-    return '20180808';
+    return '20180810';
 };
 const randomStar = (results, totalStars) => {
     const winnerIndex = Math.floor(Math.random() * Math.floor(totalStars));
