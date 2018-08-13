@@ -166,6 +166,17 @@ export class ServiceService {
     );
   }
 
+  getGif() {
+    return this.db.collection('results').doc(this.getDay()).valueChanges()
+      .pipe(map(result => {
+        console.log(result)
+        if (!result || !result['gif']){
+          return {gif:'https://media.giphy.com/media/l4FGr3nzq5u0m02vm/giphy.gif'};
+        }
+        return result;
+      }))
+  }
+
   getHumanDate() {
     const dt = this.getDay();
     return `${dt.substr(6,2)}/${dt.substr(4,2)}/${dt.substr(0,4)}`;

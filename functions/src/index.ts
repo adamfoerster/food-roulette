@@ -5,7 +5,7 @@ const functions = require('firebase-functions');
 admin.initializeApp();
 
 const getDay = () => {
-	return '20180810';
+	return '20180813';
 }
 
 const randomStar = (results, totalStars): any => {
@@ -30,7 +30,7 @@ const getTotalStars = (restaurants: any[]): number => {
 	return totalStars;
 }
 
-const getTotalStarPerRestaurant = (scores): any => {
+const getTotalStarPerRestaurant = (scores, gif): any => {
 	const results = Object.keys(scores).map(restId => {
 		const restaurant = scores[restId];
 		const people = Object.keys(restaurant);
@@ -47,17 +47,24 @@ const getTotalStarPerRestaurant = (scores): any => {
 	return {
 		stars: results,
 		total: totalStars,
-		winner: randomStar(results, totalStars)
+		winner: randomStar(results, totalStars),
+    gif: gif,
 	};
 };
 
 exports.spinTheRoulette = functions.https.onRequest((request, response) => {
-	const currentDay = getDay();
+  let currentDay = '';
+  if (request.query.day) {
+    currentDay = request.query.day;
+  } else {
+    currentDay = getDay();
+  }
+  const gif = request.query.gif;
 	const docRef = admin.firestore().collection('days').doc(currentDay);
 	const resultRef = admin.firestore().collection('results').doc(currentDay);
 	return docRef.get()
 		.then(querySnapshot => {
-			const winner = getTotalStarPerRestaurant(querySnapshot.data());
+			const winner = getTotalStarPerRestaurant(querySnapshot.data(), gif);
 			resultRef.set(winner)
 				.then(r => console.log('ok:'+r))
 				.catch(e => console.log(e));

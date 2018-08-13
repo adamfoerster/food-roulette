@@ -1,6 +1,6 @@
 <div id="container">
   <div *ngFor="let restaurant of service.restaurant$ | async">
-    <mat-card *ngIf="!service.restaurantsScored.includes(restaurant.id)">
+    <mat-card class="mat-elevation-z8" *ngIf="!service.restaurantsScored.includes(restaurant.id)">
       {{restaurant.name}}<br />
       <span *ngFor="let score of scores">
         <div class="star" [ngClass]="{'selected': isStarLit(restaurant, score)}">

@@ -16,6 +16,7 @@ export class MonitorComponent implements OnInit {
   @ViewChild('roulette') element: HTMLElement;
   isSpinning: boolean = false;
   winner: any;
+  gif: string;
 
   constructor(public renderer: Renderer, public service: ServiceService) { }
 
@@ -25,6 +26,7 @@ export class MonitorComponent implements OnInit {
       this.mapResults();
     });
     this.service.getWinner().subscribe(winner => this.winner = winner);
+    this.service.getGif().subscribe(result => this.gif = result['gif']);
   }
 
   mapResults() {
