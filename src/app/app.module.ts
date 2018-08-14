@@ -19,6 +19,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { ServiceService } from './service.service';
 import { MonitorComponent } from './monitor/monitor.component';
 import { MatListModule } from '@angular/material/list';
+import {MatButtonModule} from '@angular/material/button';
 
 @NgModule({
   declarations: [
@@ -41,6 +42,7 @@ import { MatListModule } from '@angular/material/list';
     MatSnackBarModule,
     NgxChartsModule,
     MatListModule,
+    MatButtonModule,
   ],
   providers: [ServiceService],
   bootstrap: [AppComponent]

@@ -11,7 +11,10 @@
     <router-outlet></router-outlet>
   </div>
   <ng-template #showLogin>
-    <p>Please login.</p>
-    <button (click)="login()">Login with Google</button>
+    <br />
+    <mat-card class="mat-elevation-z8">
+      <p>Please login.</p>
+      <button mat-raised-button color="primary" (click)="login()">Login with Google</button>
+    </mat-card>
   </ng-template>
 </div>
