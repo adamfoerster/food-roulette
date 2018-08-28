@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <title>Food Roulette</title>
   <base href="/">
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" async>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="assets/chrome/chrome-installprocess-128-128.png">
   <link rel="manifest" href="manifest.json">
@@ -13,7 +13,19 @@
 </head>
 
 <body>
-  <fr-root></fr-root>
+  <noscript>
+    <div style="text-align: center;margin: calc(50vh - 30px) 0;">
+      <img src="assets/chrome/chrome-installprocess-128-128.png" alt="Food Roulette"/><br />
+      <p>
+        You need javascript to run this app.
+      </p>
+    </div>
+  </noscript>
+  <fr-root>
+    <div style="text-align: center;margin: calc(50vh - 30px) 0;">
+      <img src="assets/chrome/chrome-installprocess-128-128.png" alt="Food Roulette"/>
+    </div>
+  </fr-root>
   <script type="text/javascript">
     var hkn = {
       code: "c84d2db0-9c03-11e8-b065-e9dca7c57c63"

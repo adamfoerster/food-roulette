@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from 'angularfire2/firestore';
-import { Observable, combineLatest, BehaviorSubject, Subject } from 'rxjs';
+import { Observable, combineLatest, BehaviorSubject, Subject, empty } from 'rxjs';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { auth } from 'firebase/app';
-import { map, tap, first, filter } from 'rxjs/operators';
+import { map, tap, first, filter, switchMap } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { Achievement } from './interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -180,5 +181,39 @@ export class ServiceService {
   getHumanDate() {
     const dt = this.getDay();
     return `${dt.substr(6,2)}/${dt.substr(4,2)}/${dt.substr(0,4)}`;
+  }
+
+  get achievements$(): Observable<Achievement[]> {
+    return this.getUser().pipe(
+      first(),
+      switchMap(user => {
+        if (!user.email) {
+          return empty();
+        }
+        return this.db.collection<Achievement>('achievements')
+          .valueChanges().pipe(first());
+      })
+    );
+  }
+
+  get myAchievements$(): Observable<string[]> {
+    return this.getUser().pipe(
+      first(),
+      switchMap(user => {
+        if (!user.email) {
+          return empty();
+        }
+        return this.db
+          .collection('rouletters', ref => ref
+            .where('email', '==', user.email)
+          )
+          .valueChanges()
+          .pipe(
+            first(),
+            tap(r => console.log(r)),
+            map(rouletter => rouletter[0]['achievements'])
+          );
+      })
+    );
   }
 }

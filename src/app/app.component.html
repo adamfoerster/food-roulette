@@ -1,9 +1,11 @@
 <div id="body">
   <div *ngIf="getUser() | async as user; else showLogin">
-    <mat-toolbar color="accent" class="mat-elevation-z8">
+    <mat-toolbar color="accent"
+      class="mat-elevation-z8">
       <mat-toolbar-row>
-        <mat-icon routerLink="/">home</mat-icon>
-        <span class="example-spacer">Olá {{ user.displayName }}, onde vamos comer hoje?</span>
+        <mat-icon (click)="openMenu()">reorder</mat-icon>
+        <span class="example-spacer">Olá {{ user.displayName }}, onde vamos comer
+          hoje?</span>
         <mat-icon (click)="logout()">exit_to_app</mat-icon>
       </mat-toolbar-row>
     </mat-toolbar>
@@ -14,7 +16,31 @@
     <br />
     <mat-card class="mat-elevation-z8">
       <p>Please login.</p>
-      <button mat-raised-button color="primary" (click)="login()">Login with Google</button>
+      <button mat-raised-button
+        color="primary"
+        (click)="login()">Login with Google</button>
     </mat-card>
+  </ng-template>
+  <ng-template #menu>
+    <mat-nav-list role="links">
+      <a mat-list-item
+        role="link"
+        routerLink="/">
+        <mat-icon>store</mat-icon>&nbsp;Votar
+      </a>
+      <a mat-list-item
+        role="link"
+        routerLink="/monitor">
+        <mat-icon>poll</mat-icon>&nbsp;Resultados
+      </a>
+      <!-- <a mat-list-item role="link" routerLink="">
+          <mat-icon>speaker_notes</mat-icon>&nbsp;Enviar Verso
+        </a> -->
+      <a mat-list-item
+        role="link"
+        routerLink="/achievements">
+        <mat-icon>thumb_up</mat-icon>&nbsp;Achievements
+      </a>
+    </mat-nav-list>
   </ng-template>
 </div>

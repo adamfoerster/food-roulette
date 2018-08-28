@@ -1,0 +1,46 @@
+#monitor {
+  padding: 0 20px;
+
+  .spin {
+    svg {
+      animation-name: spin;
+      animation-duration: 2000ms;
+      animation-timing-function:linear;
+      animation-iteration-count:infinite;
+    }
+  }
+  .roulette {
+    position: relative;
+    width: 300px;
+    margin: 0 auto;
+    clear: both;
+  }
+
+  .square {
+    width: 1em;
+    height: 1em;
+    border-radius: 3px;
+    margin-right: 1em;
+  }
+
+  .ngx-charts {
+    float: none !important;
+    overflow: visible;
+  }
+  @-moz-keyframes spin {
+    100% {
+      -moz-transform: rotate(360deg);
+    }
+  }
+  @-webkit-keyframes spin {
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  @keyframes spin {
+    100% {
+      -webkit-transform: rotate(360deg);
+      transform: rotate(360deg);
+    }
+  }
+}

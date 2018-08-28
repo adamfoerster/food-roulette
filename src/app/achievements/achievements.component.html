@@ -1,0 +1,14 @@
+<div id="achievements">
+  <mat-card class="mat-elevation-z8">
+    <h1>Achievements</h1>
+    <mat-card-title color="accent">
+      <div class="cols">
+          <mat-card *ngFor="let achievement of aux" class="mat-elevation-z4" [ngClass]="{achieved: my.includes(achievement.id)}">
+            <img mat-card-image [ngClass]="{grayscale: !my.includes(achievement.id)}" [src]="achievement.img">
+            <mat-card-title>{{achievement.name}}</mat-card-title>
+            <mat-card-content>{{achievement.description}}</mat-card-content>
+          </mat-card>
+      </div>
+    </mat-card-title>
+  </mat-card>
+</div>
