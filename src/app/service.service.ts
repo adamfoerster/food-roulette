@@ -1,6 +1,12 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from 'angularfire2/firestore';
-import { Observable, combineLatest, BehaviorSubject, Subject, empty } from 'rxjs';
+import {
+  Observable,
+  combineLatest,
+  BehaviorSubject,
+  Subject,
+  empty
+} from 'rxjs';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { auth } from 'firebase/app';
 import { map, tap, first, filter, switchMap } from 'rxjs/operators';
@@ -31,13 +37,22 @@ export class ServiceService {
 
   initialize(user) {
     this.restaurant$ = this.getRestaurants();
-    this.scoreOfDay$ = this.db.collection('days').doc(this.getDay())
+    this.scoreOfDay$ = this.db
+      .collection('days')
+      .doc(this.getDay())
       .valueChanges();
     combineLatest(this.restaurant$, this.scoreOfDay$)
-      .pipe(tap(res => {
-        // creates current day if doesnt exist
-        if (!res[1]) this.db.collection('days').doc(this.getDay()).set({})
-      }))
+      .pipe(
+        tap(res => {
+          // creates current day if doesnt exist
+          if (!res[1]) {
+            this.db
+              .collection('days')
+              .doc(this.getDay())
+              .set({});
+          }
+        })
+      )
       .subscribe(res => {
         const restaurants = res[0];
         const scores = res[1];
@@ -47,10 +62,14 @@ export class ServiceService {
 
         this.scoreOfDaySnap = scores;
         if (!scores) {
-          return this.db.collection('days').doc(this.getDay()).set({});
+          return this.db
+            .collection('days')
+            .doc(this.getDay())
+            .set({});
         }
-        this.restaurantsScored = Object.keys(scores)
-          .map(restId => scores[restId][uid] ? restId : null);
+        this.restaurantsScored = Object.keys(scores).map(
+          restId => (scores[restId][uid] ? restId : null)
+        );
 
         this.currentStars = this.getTotalStarPerRestaurant(scores, restaurants);
         this.currentResult$.next(this.currentStars);
@@ -64,7 +83,8 @@ export class ServiceService {
   }
 
   login() {
-    this.afAuth.auth.signInWithPopup(new auth.GoogleAuthProvider())
+    this.afAuth.auth
+      .signInWithPopup(new auth.GoogleAuthProvider())
       .then(u => this.initialize(u));
   }
 
@@ -78,22 +98,29 @@ export class ServiceService {
   }
 
   getRestaurants() {
-    return this.db.collection('restaurants').snapshotChanges()
+    return this.db
+      .collection('restaurants')
+      .snapshotChanges()
       .pipe(map((actions: any) => this.getObjectWithId(actions)));
   }
 
   addScore(restaurant, score) {
-    this.getUser().pipe(first()).subscribe(comb => {
-      const rest = restaurant.id;
-      const { uid } = comb;
-      this.db.collection('days').doc(this.getDay()).set({
-        ...this.scoreOfDaySnap,
-        [rest]: {
-          ...this.scoreOfDaySnap[rest],
-          [uid]: score
-        }
+    this.getUser()
+      .pipe(first())
+      .subscribe(comb => {
+        const rest = restaurant.id;
+        const { email } = comb;
+        this.db
+          .collection('days')
+          .doc(this.getDay())
+          .set({
+            ...this.scoreOfDaySnap,
+            [rest]: {
+              ...this.scoreOfDaySnap[rest],
+              [email]: score
+            }
+          });
       });
-    });
   }
 
   getDay() {
@@ -133,7 +160,7 @@ export class ServiceService {
       return {
         restaurant: this.getRestaurant(restaurants, restId)['name'],
         stars: stars
-      }
+      };
     });
   }
 
@@ -143,44 +170,56 @@ export class ServiceService {
 
   getRestaurantsScored(scores, uid) {
     let restaurants: string[] = [];
-    Object.keys(scores)
-      .forEach(restId => {
-        if (scores[restId][uid]) restaurants.push(restId);
-      });
+    Object.keys(scores).forEach(restId => {
+      if (scores[restId][uid]) restaurants.push(restId);
+    });
     return restaurants;
   }
 
   getWinner(): Observable<any> {
-    return combineLatest(
-      this.db.collection('results').doc(this.getDay()).valueChanges(),
-      this.getRestaurants()
-    )
-    // return this.db.collection('results').doc(this.getDay()).valueChanges()
-    .pipe(
-      filter(combo => !!combo[0] && !!combo[0]['winner']),
-      map(combo => {
-        const winner = combo[0];
-        const restaurants = combo[1];
-        return restaurants
-          .find(rest => winner['winner']['index'] == rest.id).name;
-      })
+    return (
+      combineLatest(
+        this.db
+          .collection('results')
+          .doc(this.getDay())
+          .valueChanges(),
+        this.getRestaurants()
+      )
+        // return this.db.collection('results').doc(this.getDay()).valueChanges()
+        .pipe(
+          filter(combo => !!combo[0] && !!combo[0]['winner']),
+          map(combo => {
+            const winner = combo[0];
+            const restaurants = combo[1];
+            return restaurants.find(
+              rest => winner['winner']['index'] == rest.id
+            ).name;
+          })
+        )
     );
   }
 
   getGif() {
-    return this.db.collection('results').doc(this.getDay()).valueChanges()
-      .pipe(map(result => {
-        console.log(result)
-        if (!result || !result['gif']){
-          return {gif:'https://media.giphy.com/media/l4FGr3nzq5u0m02vm/giphy.gif'};
-        }
-        return result;
-      }))
+    return this.db
+      .collection('results')
+      .doc(this.getDay())
+      .valueChanges()
+      .pipe(
+        map(result => {
+          console.log(result);
+          if (!result || !result['gif']) {
+            return {
+              gif: 'https://media.giphy.com/media/l4FGr3nzq5u0m02vm/giphy.gif'
+            };
+          }
+          return result;
+        })
+      );
   }
 
   getHumanDate() {
     const dt = this.getDay();
-    return `${dt.substr(6,2)}/${dt.substr(4,2)}/${dt.substr(0,4)}`;
+    return `${dt.substr(6, 2)}/${dt.substr(4, 2)}/${dt.substr(0, 4)}`;
   }
 
   get achievements$(): Observable<Achievement[]> {
@@ -190,8 +229,10 @@ export class ServiceService {
         if (!user.email) {
           return empty();
         }
-        return this.db.collection<Achievement>('achievements')
-          .valueChanges().pipe(first());
+        return this.db
+          .collection<Achievement>('achievements')
+          .valueChanges()
+          .pipe(first());
       })
     );
   }
@@ -204,9 +245,7 @@ export class ServiceService {
           return empty();
         }
         return this.db
-          .collection('rouletters', ref => ref
-            .where('email', '==', user.email)
-          )
+          .collection('rouletters', ref => ref.where('email', '==', user.email))
           .valueChanges()
           .pipe(
             first(),

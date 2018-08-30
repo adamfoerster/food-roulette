@@ -9,8 +9,11 @@
         <mat-icon (click)="logout()">exit_to_app</mat-icon>
       </mat-toolbar-row>
     </mat-toolbar>
-    <br />
-    <router-outlet></router-outlet>
+    <div id="content">
+      <div id="inner">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
   </div>
   <ng-template #showLogin>
     <br />

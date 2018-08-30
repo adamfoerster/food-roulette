@@ -8,7 +8,7 @@ import { ServiceService } from '../service.service';
   styleUrls: ['./score.component.scss']
 })
 export class ScoreComponent implements OnInit, OnDestroy {
-  scores = [1,2,3,4,5];
+  scores = [1, 2, 3, 4, 5];
   subFin: any;
 
   constructor(public service: ServiceService, private router: Router) {
@@ -17,7 +17,9 @@ export class ScoreComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.subFin = this.service.finished$.subscribe(finished => {
-      if (finished) this.router.navigate(['monitor']);
+      if (finished) {
+        this.router.navigate(['monitor']);
+      }
     });
   }
 
@@ -25,12 +27,11 @@ export class ScoreComponent implements OnInit, OnDestroy {
     return true;
   }
 
-  saveScore(restaurant, score){
+  saveScore(restaurant, score) {
     this.service.addScore(restaurant, score);
   }
 
   ngOnDestroy() {
     this.subFin.unsubscribe();
   }
-
 }
