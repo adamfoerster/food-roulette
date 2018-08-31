@@ -36,12 +36,20 @@ export class ServiceService {
   }
 
   initialize(user) {
-    this.restaurant$ = this.getRestaurants();
+    this.restaurant$ = this.getRestaurants()
+      .pipe(filter(r => !!r), first());
     this.scoreOfDay$ = this.db
       .collection('days')
       .doc(this.getDay())
       .valueChanges();
-    combineLatest(this.restaurant$, this.scoreOfDay$)
+    combineLatest(
+      this.restaurant$,
+      this.scoreOfDay$,
+      this.getUser().pipe(
+        filter(u => !!u && !!u['email']),
+        first()
+      )
+    )
       .pipe(
         tap(res => {
           // creates current day if doesnt exist
@@ -56,9 +64,7 @@ export class ServiceService {
       .subscribe(res => {
         const restaurants = res[0];
         const scores = res[1];
-        const { uid } = user;
-        const qtdRestScored = this.getRestaurantsScored(scores, uid).length;
-        const qtdRest = restaurants.length;
+        const { email } = user;
 
         this.scoreOfDaySnap = scores;
         if (!scores) {
@@ -67,14 +73,18 @@ export class ServiceService {
             .doc(this.getDay())
             .set({});
         }
-        this.restaurantsScored = Object.keys(scores).map(
-          restId => (scores[restId][uid] ? restId : null)
-        );
 
-        this.currentStars = this.getTotalStarPerRestaurant(scores, restaurants);
+        this.restaurantsScored = this.getRestaurantsScored(scores, email);
+        const qtdRestScored = this.restaurantsScored.length;
+        const qtdRest = restaurants.length;
+
+        this.currentStars = this.getTotalStarPerRestaurant(
+          scores,
+          restaurants
+        );
         this.currentResult$.next(this.currentStars);
 
-        if (qtdRestScored == qtdRest && qtdRest != 0) {
+        if (qtdRestScored === qtdRest && qtdRest !== 0) {
           this.finished$.next(true);
         } else {
           this.finished$.next(false);
@@ -105,18 +115,25 @@ export class ServiceService {
   }
 
   addScore(restaurant, score) {
-    this.getUser()
+    combineLatest(
+      this.getUser(),
+      this.db
+        .collection('days')
+        .doc(this.getDay())
+        .valueChanges()
+    )
       .pipe(first())
       .subscribe(comb => {
         const rest = restaurant.id;
-        const { email } = comb;
+        const { email } = comb[0];
+        const doc = comb[1];
         this.db
           .collection('days')
           .doc(this.getDay())
           .set({
-            ...this.scoreOfDaySnap,
+            ...doc,
             [rest]: {
-              ...this.scoreOfDaySnap[rest],
+              ...doc[rest],
               [email]: score
             }
           });
@@ -168,10 +185,12 @@ export class ServiceService {
     return restaurants.find(rest => rest.id == id);
   }
 
-  getRestaurantsScored(scores, uid) {
+  getRestaurantsScored(scores, email) {
     let restaurants: string[] = [];
     Object.keys(scores).forEach(restId => {
-      if (scores[restId][uid]) restaurants.push(restId);
+      if (scores[restId][email] !== undefined) {
+        restaurants.push(restId);
+      }
     });
     return restaurants;
   }
@@ -206,7 +225,6 @@ export class ServiceService {
       .valueChanges()
       .pipe(
         map(result => {
-          console.log(result);
           if (!result || !result['gif']) {
             return {
               gif: 'https://media.giphy.com/media/l4FGr3nzq5u0m02vm/giphy.gif'
@@ -249,7 +267,6 @@ export class ServiceService {
           .valueChanges()
           .pipe(
             first(),
-            tap(r => console.log(r)),
             map(rouletter => rouletter[0]['achievements'])
           );
       })

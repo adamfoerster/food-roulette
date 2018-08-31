@@ -8,7 +8,7 @@ import { ServiceService } from '../service.service';
   styleUrls: ['./score.component.scss']
 })
 export class ScoreComponent implements OnInit, OnDestroy {
-  scores = [1, 2, 3, 4, 5];
+  scores = [0, 1, 2, 3, 4];
   subFin: any;
 
   constructor(public service: ServiceService, private router: Router) {

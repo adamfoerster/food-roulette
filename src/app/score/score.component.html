@@ -6,9 +6,14 @@
       <span *ngFor="let score of scores">
         <div class="star"
           [ngClass]="{'selected': isStarLit(restaurant, score)}">
-          <mat-icon (click)="saveScore(restaurant, score)">star_rate</mat-icon>
+          <mat-icon
+            (click)="saveScore(restaurant, score)">
+            star_rate
+          </mat-icon>
           <div class="score"
-            (click)="saveScore(restaurant, score)">{{score}}</div>
+            (click)="saveScore(restaurant, score)">
+            {{score}}
+          </div>
         </div>
       </span>
     </mat-card>

@@ -24,8 +24,8 @@ export class AppComponent {
   ) {
     this.swUpdate.available.subscribe(event => {
       const snackBarRef = this.snackBar.open(
-        'Newer version of the app is available',
-        'Refresh'
+        'Nova versão do APP está disponível',
+        'Atualizar'
       );
 
       snackBarRef.onAction().subscribe(() => {
