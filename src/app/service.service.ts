@@ -36,8 +36,10 @@ export class ServiceService {
   }
 
   initialize(user) {
-    this.restaurant$ = this.getRestaurants()
-      .pipe(filter(r => !!r), first());
+    this.restaurant$ = this.getRestaurants().pipe(
+      filter(r => !!r),
+      first()
+    );
     this.scoreOfDay$ = this.db
       .collection('days')
       .doc(this.getDay())
@@ -49,47 +51,26 @@ export class ServiceService {
         filter(u => !!u && !!u['email']),
         first()
       )
-    )
-      .pipe(
-        tap(res => {
-          // creates current day if doesnt exist
-          if (!res[1]) {
-            this.db
-              .collection('days')
-              .doc(this.getDay())
-              .set({});
-          }
-        })
-      )
-      .subscribe(res => {
-        const restaurants = res[0];
-        const scores = res[1];
-        const { email } = user;
+    ).subscribe(res => {
+      const restaurants = res[0];
+      const scores = res[1] ? res[1] : [];
+      const { email } = user;
 
-        this.scoreOfDaySnap = scores;
-        if (!scores) {
-          return this.db
-            .collection('days')
-            .doc(this.getDay())
-            .set({});
-        }
+      this.scoreOfDaySnap = scores;
 
-        this.restaurantsScored = this.getRestaurantsScored(scores, email);
-        const qtdRestScored = this.restaurantsScored.length;
-        const qtdRest = restaurants.length;
+      this.restaurantsScored = this.getRestaurantsScored(scores, email);
+      const qtdRestScored = this.restaurantsScored.length;
+      const qtdRest = restaurants.length;
 
-        this.currentStars = this.getTotalStarPerRestaurant(
-          scores,
-          restaurants
-        );
-        this.currentResult$.next(this.currentStars);
+      this.currentStars = this.getTotalStarPerRestaurant(scores, restaurants);
+      this.currentResult$.next(this.currentStars);
 
-        if (qtdRestScored === qtdRest && qtdRest !== 0) {
-          this.finished$.next(true);
-        } else {
-          this.finished$.next(false);
-        }
-      });
+      if (qtdRestScored === qtdRest && qtdRest !== 0) {
+        this.finished$.next(true);
+      } else {
+        this.finished$.next(false);
+      }
+    });
   }
 
   login() {
@@ -126,14 +107,14 @@ export class ServiceService {
       .subscribe(comb => {
         const rest = restaurant.id;
         const { email } = comb[0];
-        const doc = comb[1];
+        const doc = comb[1] ? comb[1] : {};
         this.db
           .collection('days')
           .doc(this.getDay())
           .set({
             ...doc,
             [rest]: {
-              ...doc[rest],
+              ...(doc[rest] ? doc[rest] : {}),
               [email]: score
             }
           });
