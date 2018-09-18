@@ -12,4 +12,12 @@ body {
   .mat-card {
     background-color: #fce9a4;
   }
+
+  .cols {
+    display: flex;
+  }
+
+  .mat-select {
+    max-width: 300px;
+  }
 }

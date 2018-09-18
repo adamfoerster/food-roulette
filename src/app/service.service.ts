@@ -9,7 +9,7 @@ import {
 } from 'rxjs';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { auth } from 'firebase/app';
-import { map, tap, first, filter, switchMap } from 'rxjs/operators';
+import { map, first, filter, switchMap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { Achievement } from './interfaces';
 
@@ -252,5 +252,9 @@ export class ServiceService {
           );
       })
     );
+  }
+
+  get rouletter$(): Observable<any> {
+    return this.db.collection('rouletters').valueChanges();
   }
 }
