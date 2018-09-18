@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ServiceService } from '../service.service';
-import { tap } from 'rxjs/operators';
+import { tap, first } from 'rxjs/operators';
 
 @Component({
   selector: 'fr-achievements',
@@ -26,6 +26,7 @@ export class AchievementsComponent implements OnInit {
   changeRouletter(e) {
     this.service.rouletter$
         .pipe(
+          first(),
           tap(rouletters => {
             const rouletter = rouletters
               .find(r => r.email === e.value);
