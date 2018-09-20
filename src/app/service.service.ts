@@ -9,7 +9,7 @@ import {
 } from 'rxjs';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { auth } from 'firebase/app';
-import { map, first, filter, switchMap } from 'rxjs/operators';
+import { map, first, filter, switchMap, shareReplay } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { Achievement } from './interfaces';
 
@@ -92,7 +92,17 @@ export class ServiceService {
     return this.db
       .collection('restaurants')
       .snapshotChanges()
-      .pipe(map((actions: any) => this.getObjectWithId(actions)));
+      .pipe(
+        shareReplay(1),
+        map((actions: any) => this.getObjectWithId(actions))
+      );
+  }
+
+  getResults() {
+    return this.db
+      .collection('results')
+      .valueChanges()
+      .pipe(first());
   }
 
   addScore(restaurant, score) {
@@ -177,25 +187,20 @@ export class ServiceService {
   }
 
   getWinner(): Observable<any> {
-    return (
-      combineLatest(
-        this.db
-          .collection('results')
-          .doc(this.getDay())
-          .valueChanges(),
-        this.getRestaurants()
-      )
-        // return this.db.collection('results').doc(this.getDay()).valueChanges()
-        .pipe(
-          filter(combo => !!combo[0] && !!combo[0]['winner']),
-          map(combo => {
-            const winner = combo[0];
-            const restaurants = combo[1];
-            return restaurants.find(
-              rest => winner['winner']['index'] == rest.id
-            ).name;
-          })
-        )
+    return combineLatest(
+      this.db
+        .collection('results')
+        .doc(this.getDay())
+        .valueChanges(),
+      this.getRestaurants()
+    ).pipe(
+      filter(combo => !!combo[0] && !!combo[0]['winner']),
+      map(combo => {
+        const winner = combo[0];
+        const restaurants = combo[1];
+        return restaurants.find(rest => winner['winner']['index'] == rest.id)
+          .name;
+      })
     );
   }
 

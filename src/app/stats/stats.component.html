@@ -4,7 +4,16 @@
       <h1>Estatísticas</h1>
     </mat-card-title>
     <mat-card-content>
-      content
+      <div *ngFor="let result of (stats|async)">
+        <h2 style="text-transform: uppercase">{{result.name}}</h2>
+        <b>Estrelas:</b> {{result.stars}}<br>
+        <!-- <b>Dias:</b> {{result.days}}<br> -->
+        <b>Média:</b> {{result.stars / result.days | number:'1.2-2'}} estrelas por dia<br>
+        <b>Venceu:</b> {{result.won}} vezes<br>
+        <br>
+        <br>
+        <!-- <br>{{result|json}} -->
+      </div>
     </mat-card-content>
   </mat-card>
 </div>
