@@ -75,7 +75,7 @@ export class ServiceService {
 
   login() {
     this.afAuth.auth
-      .signInWithPopup(new auth.GoogleAuthProvider())
+      .signInWithRedirect(new auth.GoogleAuthProvider())
       .then(u => this.initialize(u));
   }
 
