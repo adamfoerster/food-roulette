@@ -1,0 +1,30 @@
+<div id="spinner">
+  <mat-card class="mat-elevation-z8">
+    <mat-card-title color="accent">
+      <h1>Spin The Roulette</h1>
+    </mat-card-title>
+    <mat-card-content class="cols">
+      <input #url
+        class="url"
+        matInput
+        placeholder="URL do GIF">
+      <input #day
+        matInput
+        placeholder="Dia">
+      <button mat-raised-button
+        color="primary"
+        (click)="spin(url.value, day.value)">
+        Rolar a Roleta
+      </button>
+    </mat-card-content>
+  </mat-card>
+  <br>
+  <mat-card *ngIf="winner" class="mat-elevation-z8">
+    <mat-card-title color="accent">
+      E o vencedor é:
+      <h1>{{winner}}</h1>
+      Bom apetite a todos!<br />
+      <img [src]="gif" style="width:100%" />
+    </mat-card-title>
+  </mat-card>
+</div>

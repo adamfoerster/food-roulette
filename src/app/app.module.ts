@@ -1,3 +1,4 @@
+import { HttpClientModule } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -29,6 +30,7 @@ import { MonitorComponent } from './monitor/monitor.component';
 import { ScoreComponent } from './score/score.component';
 import { StatsComponent } from './stats/stats.component';
 import { WeekComponent } from './week/week.component';
+import { SpinnerComponent } from './spinner/spinner.component';
 
 @NgModule({
   declarations: [
@@ -38,6 +40,7 @@ import { WeekComponent } from './week/week.component';
     StatsComponent,
     MonitorComponent,
     WeekComponent,
+    SpinnerComponent,
   ],
   imports: [
     BrowserModule,
@@ -50,6 +53,7 @@ import { WeekComponent } from './week/week.component';
     AngularFirestoreModule,
     AngularFireAuthModule,
     AngularFireStorageModule,
+    HttpClientModule,
     MatButtonModule,
     MatCardModule,
     MatGridListModule,

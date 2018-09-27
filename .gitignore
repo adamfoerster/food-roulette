@@ -38,3 +38,9 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+
+*.cache
+
+package-lock\.json
+
+\.angulardoc\.json

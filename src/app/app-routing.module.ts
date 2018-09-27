@@ -6,12 +6,14 @@ import { StatsComponent } from './stats/stats.component';
 import {
   AchievementsComponent
 } from './achievements/achievements.component';
+import { SpinnerComponent } from './spinner/spinner.component';
 
 const routes: Routes = [
   { path: '', component: ScoreComponent },
   { path: 'monitor', component: MonitorComponent },
   { path: 'stats', component: StatsComponent },
   { path: 'achievements', component: AchievementsComponent },
+  { path: 'spinner', component: SpinnerComponent },
 ];
 
 @NgModule({
