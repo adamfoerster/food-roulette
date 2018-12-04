@@ -262,4 +262,17 @@ export class ServiceService {
   get rouletter$(): Observable<any> {
     return this.db.collection('rouletters').valueChanges();
   }
+
+  grantAchievement(email, achievementId) {
+    this.rouletter$.pipe(first()).subscribe(combo => {
+      const rouletter = combo[0];
+      this.db
+        .collection('rouletters')
+        .doc(email)
+        .set({
+          ...rouletter,
+          achievements: [...rouletter.achievements, achievementId]
+        });
+    });
+  }
 }

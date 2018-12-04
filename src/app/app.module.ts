@@ -22,10 +22,10 @@ import { MatListModule } from '@angular/material/list';
 import { MatButtonModule } from '@angular/material/button';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatBottomSheetModule } from '@angular/material';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatChipsModule } from '@angular/material/chips';
 
-import {
-  AchievementsComponent
-} from './achievements/achievements.component';
+import { AchievementsComponent } from './achievements/achievements.component';
 import { MonitorComponent } from './monitor/monitor.component';
 import { ScoreComponent } from './score/score.component';
 import { StatsComponent } from './stats/stats.component';
@@ -40,7 +40,7 @@ import { SpinnerComponent } from './spinner/spinner.component';
     StatsComponent,
     MonitorComponent,
     WeekComponent,
-    SpinnerComponent,
+    SpinnerComponent
   ],
   imports: [
     BrowserModule,
@@ -57,13 +57,15 @@ import { SpinnerComponent } from './spinner/spinner.component';
     MatButtonModule,
     MatCardModule,
     MatGridListModule,
+    MatAutocompleteModule,
     MatIconModule,
     MatListModule,
     MatSelectModule,
     MatSnackBarModule,
     MatToolbarModule,
     MatBottomSheetModule,
-    NgxChartsModule,
+    MatChipsModule,
+    NgxChartsModule
   ],
   providers: [ServiceService],
   bootstrap: [AppComponent]

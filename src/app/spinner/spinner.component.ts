@@ -1,25 +1,36 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Achievement } from './../interfaces';
+import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { ServiceService } from '../service.service';
+import { first, map } from 'rxjs/operators';
 
 @Component({
   selector: 'fr-spinner',
   templateUrl: 'spinner.component.html',
   styleUrls: ['spinner.component.scss']
 })
-export class SpinnerComponent implements OnInit {
+export class SpinnerComponent implements OnInit, OnDestroy {
   @ViewChild('day')
   day: ElementRef;
   winner: any;
   gif: string;
+  rouletters: any = [];
+  emailinput = '';
+  achieveinput = '';
+  achievements: any = [];
+  achievsOfRouletter: string[] = [];
+  selectedRouletter;
+  selectedAchievement = '';
+  sub: any;
 
   constructor(public service: ServiceService) {}
 
   ngOnInit() {
     this.day.nativeElement.value = this.service.getDay();
-    this.service.getWinner()
-      .subscribe(winner => (this.winner = winner));
-    this.service.getGif()
-      .subscribe(result => (this.gif = result['gif']));
+    this.service.getWinner().subscribe(winner => (this.winner = winner));
+    this.service.getGif().subscribe(result => (this.gif = result['gif']));
+    this.service.rouletter$.pipe(first()).subscribe(r => (this.rouletters = r));
+    this.service.achievements$.pipe(first())
+      .subscribe(a => this.achievements = a);
   }
 
   spin(url, day) {
@@ -29,5 +40,59 @@ export class SpinnerComponent implements OnInit {
       `&gif=${url}`
     ].join('');
     window.open(link, '_blank');
+  }
+
+  changeEmail(input, e) {
+    this.emailinput = e;
+  }
+
+  changeAchievements(input, e) {
+    this.achieveinput = e;
+  }
+
+  get filtered() {
+    if (!this.rouletters || !this.rouletters.length) {
+      return [];
+    }
+    return this.rouletters.filter(r => r.email.search(this.emailinput) >= 0);
+  }
+
+  get filteredAchieves() {
+    if (!this.achievements || !this.achievements.length) {
+      return [];
+    }
+    return this.achievements
+      .filter(a => a['name'].search(this.achieveinput) >= 0);
+  }
+
+  display(e) {
+    return e ? e['name'] : null;
+  }
+
+  grantAchievement(rouletter, achievement) {
+    this.service.grantAchievement(
+      rouletter, 
+      this.achievements.find(a => a.name === achievement).id
+    );
+  }
+
+  selectAchievement(e) {
+    this.selectedAchievement = e;
+  }
+
+  selectRouletter(e) {
+    this.selectedRouletter = e;
+    console.log(e);
+    const achieved = this.getAchievementsOfRouletter(e);
+    this.achievsOfRouletter = this.achievements
+      .filter(a => achieved.includes(a.id));
+  }
+
+  getAchievementsOfRouletter(rouletter) {
+    return rouletter.achievements;
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
   }
 }

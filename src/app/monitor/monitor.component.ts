@@ -27,7 +27,22 @@ export class MonitorComponent implements OnInit {
       '#00CCCC',
       '#0066CC',
       '#0000CC',
-      '#000066'
+      '#000066',
+      '#EF5350',
+      '#EC407A',
+      '#AB47BC',
+      '#7E57C2',
+      '#5C6BC0',
+      '#42A5F5',
+      '#B0BEC5',
+      '#EEEEEE',
+      '#BCAAA4',
+      '#FFAB91',
+      '#FFCC80',
+      '#DCE775',
+      '#81C784',
+      '#4DB6AC',
+      '#4DD0E1',
     ]
   };
   @ViewChild('roulette')

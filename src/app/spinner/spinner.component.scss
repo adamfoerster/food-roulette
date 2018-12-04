@@ -5,4 +5,12 @@
   input {
     padding: 0 .5em;
   }
+  .email:first-child {
+    padding: .5em;
+    flex-grow: 1;
+  }
+  .email {
+    padding: .5em;
+    flex-grow: 3;
+  }
 }

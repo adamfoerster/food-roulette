@@ -23,14 +23,14 @@ export class AppComponent {
     private router: Router,
   ) {
     this.swUpdate.available.subscribe(event => {
-      const snackBarRef = this.snackBar.open(
-        'Nova versão do APP está disponível',
-        'Atualizar'
-      );
+      // const snackBarRef = this.snackBar.open(
+      //   'Nova versão do APP está disponível',
+      //   'Atualizar'
+      // );
 
-      snackBarRef.onAction().subscribe(() => {
+      // snackBarRef.onAction().subscribe(() => {
         window.location.reload();
-      });
+      // });
     });
 
     this.router.events
