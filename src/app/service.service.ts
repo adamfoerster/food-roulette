@@ -1,4 +1,3 @@
-import { forEach } from '@angular/router/src/utils/collection';
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from 'angularfire2/firestore';
 import {
@@ -217,7 +216,7 @@ export class ServiceService {
       });
       const rest = this.getRestaurant(restaurants, restId);
       return {
-        restaurant: rest ? rest['name'] : '',
+        restaurant: rest ? rest['name'] : '(banido)',
         stars: stars
       };
     });
@@ -276,8 +275,8 @@ export class ServiceService {
       this.getWinnerId()
     ).pipe(
       first(),
-      tap(doc => console.log(doc)),
-      map(doc => Object.keys(doc[0][doc[1]]).join(','))
+      map(doc => doc[0][doc[1]]),
+      map(doc => Object.keys(doc).filter(mail => doc[mail] > 0).join(', '))
     );
   }
 
