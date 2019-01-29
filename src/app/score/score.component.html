@@ -1,21 +1,30 @@
 <div id="container">
-  <div *ngFor="let restaurant of service.restaurant$ | async">
-    <mat-card class="mat-elevation-z8"
-      *ngIf="!service.restaurantsScored.includes(restaurant.id)">
-      {{restaurant.name}}<br />
+  <div *ngFor="let restaurant of (service.restaurant$ | async)">
+    <mat-card
+      class="mat-elevation-z8"
+      *ngIf="!service.restaurantsScored.includes(restaurant.id)"
+    >
+      {{ restaurant.name }}<br />
       <span *ngFor="let score of scores">
-        <div class="star"
-          [ngClass]="{'selected': isStarLit(restaurant, score)}">
-          <mat-icon
-            (click)="saveScore(restaurant, score)">
+        <div
+          class="star"
+          [ngClass]="{ selected: isStarLit(restaurant, score) }"
+        >
+          <mat-icon (click)="saveScore(restaurant, score)">
             star_rate
           </mat-icon>
-          <div class="score"
-            (click)="saveScore(restaurant, score)">
-            {{score}}
+          <div class="score" (click)="saveScore(restaurant, score)">
+            {{ score }}
           </div>
         </div>
       </span>
     </mat-card>
   </div>
 </div>
+<br />
+<mat-card class="center mat-elevation-z8">
+  Vote nos seus favoritos e depois dê zero pro resto!<br /><br>
+  <button class="zero" (click)="zeroToOthers()">Dá zero pra eles!</button>
+</mat-card>
+<br>
+<br>

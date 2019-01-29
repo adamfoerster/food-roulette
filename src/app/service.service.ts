@@ -1,3 +1,4 @@
+import { forEach } from '@angular/router/src/utils/collection';
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from 'angularfire2/firestore';
 import {
@@ -5,11 +6,19 @@ import {
   combineLatest,
   BehaviorSubject,
   Subject,
-  empty
+  empty,
+  of
 } from 'rxjs';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { auth } from 'firebase/app';
-import { map, first, filter, switchMap, shareReplay } from 'rxjs/operators';
+import {
+  map,
+  first,
+  filter,
+  switchMap,
+  shareReplay,
+  tap
+} from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { Achievement } from './interfaces';
 
@@ -94,13 +103,22 @@ export class ServiceService {
       .snapshotChanges()
       .pipe(
         shareReplay(1),
-        map((actions: any) => this.getObjectWithId(actions))
+        map((actions: any) => this.getObjectWithId(actions)),
+        map(rests => rests.filter(rest => !!rest.enabled))
       );
   }
 
   getResults() {
     return this.db
       .collection('results')
+      .valueChanges()
+      .pipe(first());
+  }
+
+  getResult() {
+    return this.db
+      .collection('results')
+      .doc(this.getDay())
       .valueChanges()
       .pipe(first());
   }
@@ -118,16 +136,48 @@ export class ServiceService {
         const rest = restaurant.id;
         const { email } = comb[0];
         const doc = comb[1] ? comb[1] : {};
+        const newDoc = {
+          ...doc,
+          [rest]: {
+            ...(doc[rest] ? doc[rest] : {}),
+            [email]: score
+          }
+        };
         this.db
           .collection('days')
           .doc(this.getDay())
-          .set({
-            ...doc,
-            [rest]: {
-              ...(doc[rest] ? doc[rest] : {}),
-              [email]: score
-            }
-          });
+          .set(newDoc)
+          .catch(error => console.log(error));
+      });
+  }
+
+  multipleScore(restaurants, score) {
+    combineLatest(
+      this.getUser(),
+      this.db
+        .collection('days')
+        .doc(this.getDay())
+        .valueChanges()
+    )
+      .pipe(first())
+      .subscribe(comb => {
+        const { email } = comb[0];
+        const doc = comb[1] ? comb[1] : {};
+        const restIds = restaurants.map(rest => rest.id);
+        let newRests = {};
+        restIds.forEach(id => newRests[id] = {
+          ...(doc[id] ? doc[id] : {}),
+            [email]: score
+        });
+        const newDoc = {
+          ...doc,
+          ...newRests
+        };
+        this.db
+          .collection('days')
+          .doc(this.getDay())
+          .set(newDoc)
+          .catch(error => console.log(error));
       });
   }
 
@@ -165,8 +215,9 @@ export class ServiceService {
       people.forEach(userId => {
         stars = restaurant[userId] + stars;
       });
+      const rest = this.getRestaurant(restaurants, restId);
       return {
-        restaurant: this.getRestaurant(restaurants, restId)['name'],
+        restaurant: rest ? rest['name'] : '',
         stars: stars
       };
     });
@@ -177,7 +228,7 @@ export class ServiceService {
   }
 
   getRestaurantsScored(scores, email) {
-    let restaurants: string[] = [];
+    const restaurants: string[] = [];
     Object.keys(scores).forEach(restId => {
       if (scores[restId][email] !== undefined) {
         restaurants.push(restId);
@@ -198,9 +249,35 @@ export class ServiceService {
       map(combo => {
         const winner = combo[0];
         const restaurants = combo[1];
-        return restaurants.find(rest => winner['winner']['index'] == rest.id)
+        return restaurants.find(rest => winner['winner']['index'] === rest.id)
           .name;
       })
+    );
+  }
+
+  getWinnerId(): Observable<any> {
+    return this.db
+      .collection('results')
+      .doc(this.getDay())
+      .valueChanges()
+      .pipe(
+        first(),
+        filter(combo => !!combo && !!combo['winner']),
+        map(winner => winner['winner']['index'])
+      );
+  }
+
+  getVoters() {
+    return combineLatest(
+      this.db
+        .collection('days')
+        .doc(this.getDay())
+        .valueChanges(),
+      this.getWinnerId()
+    ).pipe(
+      first(),
+      tap(doc => console.log(doc)),
+      map(doc => Object.keys(doc[0][doc[1]]).join(','))
     );
   }
 
@@ -263,9 +340,54 @@ export class ServiceService {
     return this.db.collection('rouletters').valueChanges();
   }
 
+  getMyTodayVotes() {
+    return combineLatest(
+      this.db
+        .collection('days')
+        .doc(this.getDay())
+        .valueChanges(),
+      this.getUser()
+    ).pipe(
+      map(combo => {
+        const restaurants = combo[0] ? Object.keys(combo[0]) : [];
+        const email = combo[1].email;
+        const idsVoted = [];
+        restaurants.forEach(rest => {
+          if (combo[0][rest][email]) {
+            idsVoted.push(rest);
+          }
+        });
+        return idsVoted;
+      })
+    );
+  }
+
+  zeroToOthers() {
+    combineLatest(this.getRestaurants(), this.getMyTodayVotes())
+      .pipe(
+        first(),
+        map(combo => {
+          const rests = combo[0].map(rest => rest.id);
+          return rests.filter(rest => !combo[1].includes(rest));
+        }),
+        switchMap(rests =>
+          combineLatest(this.getRestaurants().pipe(first()), of(rests))
+        )
+      )
+      .subscribe(combo => {
+        const restaurants = combo[0];
+        const notVoted = combo[1];
+        let restsToZero = [];
+        notVoted.forEach(notVote => {
+          restsToZero.push(restaurants.find(rest => notVote === rest.id));
+        });
+        this.multipleScore(restsToZero, 0);
+      });
+  }
+
   grantAchievement(email, achievementId) {
     this.rouletter$.pipe(first()).subscribe(combo => {
-      const rouletter = combo[0];
+      const rouletter = combo.find(roul => roul.email === email);
       this.db
         .collection('rouletters')
         .doc(email)

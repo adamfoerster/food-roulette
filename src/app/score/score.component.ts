@@ -31,6 +31,10 @@ export class ScoreComponent implements OnInit, OnDestroy {
     this.service.addScore(restaurant, score);
   }
 
+  zeroToOthers() {
+    this.service.zeroToOthers();
+  }
+
   ngOnDestroy() {
     this.subFin.unsubscribe();
   }

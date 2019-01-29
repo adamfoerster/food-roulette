@@ -50,6 +50,7 @@ export class MonitorComponent implements OnInit {
   isSpinning = false;
   winner: any;
   gif: string;
+  voters = '';
 
   constructor(public renderer: Renderer, public service: ServiceService) {}
 
@@ -58,7 +59,11 @@ export class MonitorComponent implements OnInit {
     this.service.currentResult$.subscribe(_ => {
       this.mapResults();
     });
-    this.service.getWinner().subscribe(winner => (this.winner = winner));
+    this.service.getWinner().subscribe(winner => {
+      this.winner = winner;
+      this.service.getVoters()
+        .subscribe(voters => this.voters = voters);
+    });
     this.service.getGif().subscribe(result => (this.gif = result['gif']));
   }
 

@@ -1,5 +1,11 @@
 import { Achievement } from './../interfaces';
-import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  ElementRef,
+  OnDestroy
+} from '@angular/core';
 import { ServiceService } from '../service.service';
 import { first, map } from 'rxjs/operators';
 
@@ -29,8 +35,9 @@ export class SpinnerComponent implements OnInit, OnDestroy {
     this.service.getWinner().subscribe(winner => (this.winner = winner));
     this.service.getGif().subscribe(result => (this.gif = result['gif']));
     this.service.rouletter$.pipe(first()).subscribe(r => (this.rouletters = r));
-    this.service.achievements$.pipe(first())
-      .subscribe(a => this.achievements = a);
+    this.service.achievements$
+      .pipe(first())
+      .subscribe(a => (this.achievements = a));
   }
 
   spin(url, day) {
@@ -61,8 +68,9 @@ export class SpinnerComponent implements OnInit, OnDestroy {
     if (!this.achievements || !this.achievements.length) {
       return [];
     }
-    return this.achievements
-      .filter(a => a['name'].search(this.achieveinput) >= 0);
+    return this.achievements.filter(
+      a => a['name'].search(this.achieveinput) >= 0
+    );
   }
 
   display(e) {
@@ -71,7 +79,7 @@ export class SpinnerComponent implements OnInit, OnDestroy {
 
   grantAchievement(rouletter, achievement) {
     this.service.grantAchievement(
-      rouletter, 
+      rouletter,
       this.achievements.find(a => a.name === achievement).id
     );
   }
@@ -84,8 +92,9 @@ export class SpinnerComponent implements OnInit, OnDestroy {
     this.selectedRouletter = e;
     console.log(e);
     const achieved = this.getAchievementsOfRouletter(e);
-    this.achievsOfRouletter = this.achievements
-      .filter(a => achieved.includes(a.id));
+    this.achievsOfRouletter = this.achievements.filter(a =>
+      achieved.includes(a.id)
+    );
   }
 
   getAchievementsOfRouletter(rouletter) {
@@ -93,6 +102,8 @@ export class SpinnerComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.sub.unsubscribe();
+    if (this.sub) {
+      this.sub.unsubscribe();
+    }
   }
 }
