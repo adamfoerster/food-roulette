@@ -1,14 +1,24 @@
 {
+  "exclude": [
+    "node_modules",
+    "typings",
+    "./node_modules",
+    "./node_modules/*",
+    "./node_modules/@types/node/index.d.ts",
+    "../node_modules/@types/cordova/index.d.ts",
+    "./node_modules/@types/cordova/index.d.ts",
+    "../node_modules",
+    "../typings"
+  ],
   "compilerOptions": {
     "lib": ["es6"],
     "module": "commonjs",
     "noImplicitReturns": true,
     "outDir": "lib",
     "sourceMap": true,
-    "target": "es6"
+    "target": "es6",
+    "types": []
   },
   "compileOnSave": true,
-  "include": [
-    "src"
-  ]
+  "include": ["src"]
 }
