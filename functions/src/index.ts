@@ -9,14 +9,10 @@ const app = express();
 app.use(cors({ origin: true }));
 // app.use(auth);
 
-app.get('/spin-the-roulette', (request, response) => {
-  return spinTheRoulette(request, response);
-});
+app.get('/spin-the-roulette', spinTheRoulette);
 
 app.get('/dog', (request, response) => {
   response.send('DOG');
 });
 
 export const api = functions.https.onRequest(app);
-
-

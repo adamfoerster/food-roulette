@@ -1,10 +1,10 @@
 import * as admin from 'firebase-admin';
-import * as functions from 'firebase-functions';
+import * as dayjs from 'dayjs';
 
 admin.initializeApp();
 
 const getDay = () => {
-  return '20180813';
+  return dayjs().format('YYYYMMDD');
 };
 
 const randomStar = (results, totalStars): any => {
@@ -47,35 +47,33 @@ const getTotalStarPerRestaurant = (scores, gif): any => {
     stars: results,
     total: totalStars,
     winner: randomStar(results, totalStars),
-    gif: gif
+    gif: gif ? gif : ''
   };
 };
 
-export const spinTheRoulette = (request, response) => {
-  let currentDay = '';
-  if (request.query.day) {
-    currentDay = request.query.day;
-  } else {
-    currentDay = getDay();
+export const spinTheRoulette = async (request, response) => {
+  try {
+    let currentDay = '';
+    if (request.query.day) {
+      currentDay = request.query.day;
+    } else {
+      currentDay = getDay();
+    }
+    const gif = request.query.gif;
+    const docRef = admin
+      .firestore()
+      .collection('days')
+      .doc(currentDay);
+    const resultRef = admin
+      .firestore()
+      .collection('results')
+      .doc(currentDay);
+    const querySnapshot = await docRef.get();
+    const winner = getTotalStarPerRestaurant(querySnapshot.data(), gif);
+    await resultRef.set(winner);
+    return response.send(winner);
+  } catch (err) {
+    console.log(err);
+    response.send(err);
   }
-  const gif = request.query.gif;
-  const docRef = admin
-    .firestore()
-    .collection('days')
-    .doc(currentDay);
-  const resultRef = admin
-    .firestore()
-    .collection('results')
-    .doc(currentDay);
-  return docRef
-    .get()
-    .then(querySnapshot => {
-      const winner = getTotalStarPerRestaurant(querySnapshot.data(), gif);
-      resultRef
-        .set(winner)
-        .then(r => console.log('ok:' + r))
-        .catch(e => console.log(e));
-      return response.send(winner);
-    })
-    .catch(err => console.log(err));
 };
