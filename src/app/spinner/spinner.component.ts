@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import { ServiceService } from '../service.service';
 import { first, map } from 'rxjs/operators';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'fr-spinner',
@@ -27,8 +28,12 @@ export class SpinnerComponent implements OnInit, OnDestroy {
   selectedRouletter;
   selectedAchievement = '';
   sub: any;
+  link: any;
 
-  constructor(public service: ServiceService) {}
+  constructor(
+    public service: ServiceService,
+    private sanitizer: DomSanitizer
+  ) {}
 
   ngOnInit() {
     this.day.nativeElement.value = this.service.getDay();
@@ -41,12 +46,12 @@ export class SpinnerComponent implements OnInit, OnDestroy {
   }
 
   spin(url, day) {
-    const link = [
+    this.link = this.sanitizer.bypassSecurityTrustResourceUrl([
       `https://us-central1-food-roulette-9415c.cloudfunctions.`,
       `net/spinTheRoulette?day=${day}`,
       `&gif=${url}`
-    ].join('');
-    window.open(link, '_blank');
+    ].join(''));
+    // window.open(this.link, '_blank');
   }
 
   changeEmail(input, e) {

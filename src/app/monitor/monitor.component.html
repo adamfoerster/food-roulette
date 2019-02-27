@@ -4,7 +4,12 @@
       E o vencedor é:
       <h1>{{winner}}</h1>
       Bom apetite a todos!<br />
-      Parabéns para {{voters}} que acreditou(aram) e votou(aram) neste restaurante!
+      <span *ngIf="voters.includes(',')">
+        Parabéns para {{voters}} que acreditaram e votaram neste restaurante!  
+      </span>
+      <span *ngIf="!voters.includes(',')">
+        Parabéns para {{voters}} que acreditou e votou neste restaurante!  
+      </span>
       <img [src]="gif" style="width:100%" />
     </mat-card-title>
   </mat-card>
