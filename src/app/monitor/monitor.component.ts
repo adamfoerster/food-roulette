@@ -45,7 +45,7 @@ export class MonitorComponent implements OnInit {
       '#4DD0E1',
     ]
   };
-  @ViewChild('roulette')
+  @ViewChild('roulette', { static: false })
   element: HTMLElement;
   isSpinning = false;
   winner: any;

@@ -16,7 +16,7 @@ import { DomSanitizer } from '@angular/platform-browser';
   styleUrls: ['spinner.component.scss']
 })
 export class SpinnerComponent implements OnInit, OnDestroy {
-  @ViewChild('day')
+  @ViewChild('day', { static: true })
   day: ElementRef;
   winner: any;
   gif: string;

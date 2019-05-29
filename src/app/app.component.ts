@@ -2,7 +2,8 @@ import { Component, ViewChild, TemplateRef } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { ServiceService } from './service.service';
 import { SwUpdate } from '@angular/service-worker';
-import { MatSnackBar, MatBottomSheet } from '@angular/material';
+import { MatBottomSheet } from '@angular/material/bottom-sheet';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { filter } from 'rxjs/operators';
 
 @Component({
@@ -11,7 +12,7 @@ import { filter } from 'rxjs/operators';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  @ViewChild('menu')
+  @ViewChild('menu', { static: true })
   menu: TemplateRef<any>;
   constructor(
     private service: ServiceService,
