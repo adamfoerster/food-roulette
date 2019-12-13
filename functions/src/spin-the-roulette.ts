@@ -1,10 +1,10 @@
-import * as admin from 'firebase-admin';
-import * as dayjs from 'dayjs';
+import * as admin from "firebase-admin";
+import * as dayjs from "dayjs";
 
 admin.initializeApp();
 
 const getDay = () => {
-  return dayjs().format('YYYYMMDD');
+  return dayjs().format("YYYYMMDD");
 };
 
 const randomStar = (results, totalStars): any => {
@@ -47,13 +47,13 @@ const getTotalStarPerRestaurant = (scores, gif): any => {
     stars: results,
     total: totalStars,
     winner: randomStar(results, totalStars),
-    gif: gif ? gif : ''
+    gif: gif ? gif : ""
   };
 };
 
 export const spinTheRoulette = async (request, response) => {
   try {
-    let currentDay = '';
+    let currentDay = "";
     if (request.query.day) {
       currentDay = request.query.day;
     } else {
@@ -62,11 +62,11 @@ export const spinTheRoulette = async (request, response) => {
     const gif = request.query.gif;
     const docRef = admin
       .firestore()
-      .collection('days')
+      .collection("days")
       .doc(currentDay);
     const resultRef = admin
       .firestore()
-      .collection('results')
+      .collection("results")
       .doc(currentDay);
     const querySnapshot = await docRef.get();
     const winner = getTotalStarPerRestaurant(querySnapshot.data(), gif);
