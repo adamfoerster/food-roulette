@@ -47,8 +47,8 @@ export class SpinnerComponent implements OnInit, OnDestroy {
 
   spin(url, day) {
     this.link = this.sanitizer.bypassSecurityTrustResourceUrl([
-      `https://us-central1-food-roulette-9415c.cloudfunctions.`,
-      `net/spinTheRoulette?day=${day}`,
+      `https://us-central1-food-roulette-9415c.cloudfunctions.net/api/spin-the-roulette.`,
+      `?day=${day}`,
       `&gif=${url}`
     ].join(''));
     // window.open(this.link, '_blank');
