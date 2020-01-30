@@ -10,6 +10,8 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v1
         with:
-          build: npm i %26%26 npm i typescript%403.6
+          build:
+            - npm i
+            - npm i typescript%403.6
           start: npm start
           wait-on: http://localhost:4200
